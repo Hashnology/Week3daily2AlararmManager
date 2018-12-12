@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_10ssp"
+    android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMajorCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#72ea72"
+            android:gravity="center"
+            android:padding="@dimen/_20ssp"
+            android:text="Category"
+            android:textColor="#000"
+            android:textSize="@dimen/_20ssp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1ssp"
+        android:background="#000"
+        />
+
+</LinearLayout>
