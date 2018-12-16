@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="horizontal"
+android:id="@+id/layout"
+android:layout_width="@dimen/_250sdp"
+android:layout_height="@dimen/_180sdp"
+    >
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/_150sdp"
+    tools:context=".MainActivity"
+    android:background="#fff"
+    android:elevation="@dimen/cardview_compat_inset_shadow"
+    android:padding="10dp"
+    >
+
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cd_1"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_150sdp"
+        android:padding="@dimen/cardview_compat_inset_shadow"
+        app:cardElevation="20dp"
+        app:cardCornerRadius="10dp"
+        android:background="#000"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        >
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_110sdp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/ic_launcher_background"
+            android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/tv_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_115sdp"
+            android:text="Name:"
+            android:textColor="#000"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textSize="@dimen/_15sdp" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginLeft="@dimen/_160sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Name"
+            android:textSize="@dimen/_15sdp" />
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:text="Email:"
+            android:layout_marginLeft="@dimen/_115sdp"
+            android:textSize="@dimen/_15sdp"
+            android:gravity="center_vertical"
+            android:textColor="#000"
+            />
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:text="Email"
+            android:layout_marginLeft="@dimen/_160sdp"
+            android:textSize="@dimen/_15sdp"
+            android:gravity="center_vertical"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone:"
+            android:layout_marginTop="@dimen/_70sdp"
+            android:textSize="@dimen/_15sdp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_115sdp"
+            android:textColor="#000"
+            />
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_70sdp"
+            android:layout_marginLeft="@dimen/_160sdp"
+            android:text="Phone:"
+            android:textSize="@dimen/_15sdp"
+            android:gravity="center_vertical"
+            />
+
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
+</LinearLayout>
