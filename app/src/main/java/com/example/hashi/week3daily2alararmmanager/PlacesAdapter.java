@@ -1,6 +1,7 @@
 package com.example.hashi.week3daily2alararmmanager;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -36,14 +37,15 @@ public class PlacesAdapter extends RecyclerView.Adapter<viewHolderPlaces> {
     @NonNull
     @Override
     public viewHolderPlaces onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_view, parent, false);
+//        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.item_view_adapter, parent, false);
 
 
         viewHolder = new viewHolderPlaces(view);
 
         return viewHolder;
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull final viewHolderPlaces holder, int position) {
@@ -53,14 +55,18 @@ public class PlacesAdapter extends RecyclerView.Adapter<viewHolderPlaces> {
         current = data.get(position);
 
         final String name = current.getName();
+        final String email=current.getEmail();
+        final String phone=current.getPhone();
+        final byte[] image = current.getImageByteArray();
+
+        viewHolder.uname.setText(name);
+        viewHolder.uemail.setText(email);
+        viewHolder.uphone.setText(phone);
+        viewHolder.uimage.setImageBitmap(BitmapFactory.decodeByteArray(image,0,image.length));
 
 
-        viewHolder.categoryName.setText(name);
 
-
-
-
-
+/*
         viewHolder.categoryName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +83,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<viewHolderPlaces> {
 //                fragment.setArguments(bundle);
 //                activity.getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
             }
-        });
+        });*/
 
 
     }
@@ -85,5 +91,15 @@ public class PlacesAdapter extends RecyclerView.Adapter<viewHolderPlaces> {
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 }

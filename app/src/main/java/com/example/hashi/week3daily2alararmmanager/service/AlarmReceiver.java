@@ -11,7 +11,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-
+/*alram receiver receives data from alaram manger*/
         Toast.makeText(context, "Alarm has been received "+intent.getStringExtra("test"), Toast.LENGTH_LONG).show();
         Intent intent1 = new Intent(context, MyForeGroundService.class);
         intent1.setAction(MyForeGroundService.ACTION_START_FOREGROUND_SERVICE);

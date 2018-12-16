@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hashi.week3daily2alararmmanager.model.MyPlaces;
 import com.example.hashi.week3daily2alararmmanager.service.MyService;
@@ -34,20 +36,23 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     MyReceiver myReceiver;
     public ImageView iv_user;
-    ArrayList<MyPlaces> arrayList;
+    static ArrayList<MyPlaces> arrayList;
     public static final String FILTER_ACTION_KEY = "any_key";
+    private int PICK_IMAGE_REQUEST = 1;
 
-     PlacesAdapter categoryAdapter;
-     RecyclerView recyclerView;
-     Context context;
-     EditText editName, editEmail, editPhone;
+    static PlacesAdapter categoryAdapter;
+    static RecyclerView recyclerView;
+    Context context;
+    EditText editName, editEmail, editPhone;
     public static final int PICK_IMAGE = 1;
-     Bitmap bitmap;
+    Bitmap bitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        context = MainActivity.this;
 //        textView = findViewById(R.id.textView);
         button = findViewById(R.id.btn_submit);
 
@@ -61,17 +66,25 @@ public class MainActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(recyclerView.getContext(), 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+        setReceiver();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = editName.getText().toString();
                 String email = editEmail.getText().toString();
                 String phone = editPhone.getText().toString();
+                Toast.makeText(context, "Wait 5 sec then data will come to recyclerview", Toast.LENGTH_LONG).show();
+                Utils.savePreferences("started", "true", context);
                 Intent intent = new Intent(MainActivity.this, MyService.class);
                 intent.putExtra("message", name);
                 intent.putExtra("email", email);
                 intent.putExtra("phone", phone);
-                intent.putExtra("imageByteArray", getImageByteArrayFromBitmap(bitmap));
+
+                //intent.putExtra("imageByteArray", getImageByteArrayFromBitmap(bitmap));
+
+                byte[] image = getImageByteArrayFromBitmap(iv_user);
+                intent.putExtra("imageByteArray", image);
+
                 startService(intent);
             }
         });
@@ -79,27 +92,20 @@ public class MainActivity extends AppCompatActivity {
         iv_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+   /*             Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+   */
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+
             }
         });
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            Uri uri = data.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                iv_user.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void setReceiver() {
@@ -110,19 +116,62 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, intentFilter);
     }
 
+
     @Override
     protected void onStart() {
-        setReceiver();
+
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        unregisterReceiver(myReceiver);
+        try {
+            unregisterReceiver(myReceiver);
+        } catch (Exception e) {
+
+        }
+
         super.onStop();
     }
 
-    public class MyReceiver extends BroadcastReceiver {
+    private byte[] getImageByteArrayFromBitmap(ImageView imageView) {
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        return stream.toByteArray();
+    }
+
+    /* private byte[] getImageByteArrayFromBitmap(Bitmap bitmap) {
+         ByteArrayOutputStream stream = new ByteArrayOutputStream();
+         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+         byte[] byteArray = stream.toByteArray();
+         bitmap.recycle();
+         return byteArray;
+
+     }
+    */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+
+
+                iv_user.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static class MyReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -132,23 +181,22 @@ public class MainActivity extends AppCompatActivity {
             byte[] imageByteArray = intent.getByteArrayExtra("imageByteArray");
 
 //            textView.setText(textView.getText() + "\n" + message);
+// Log.d("name","name "+name);
 
-            MyPlaces ob = new MyPlaces(name,email,phone,imageByteArray);
+            String started=Utils.getPreferences("started",context);
+            if(started.equalsIgnoreCase("true")) {
+                Utils.savePreferences("started", "false", context);
+                MyPlaces ob = new MyPlaces(name, email, phone, imageByteArray);
+                arrayList.add(ob);
+                categoryAdapter = new PlacesAdapter(context, arrayList);
+                recyclerView.setAdapter(categoryAdapter);
+                categoryAdapter.notifyDataSetChanged();
+//                Intent intent1=new Intent(context,MainActivity.class);
+//                context.startActivity(intent1);
+            }
 
-            arrayList.add(ob);
-            categoryAdapter=new PlacesAdapter(context,arrayList);
-            recyclerView.setAdapter(categoryAdapter);
-            categoryAdapter.notifyDataSetChanged();
+
         }
-
-    }
-
-    private byte[] getImageByteArrayFromBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        bitmap.recycle();
-        return byteArray;
 
     }
 }

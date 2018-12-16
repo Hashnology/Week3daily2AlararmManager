@@ -21,14 +21,13 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = this;
 
-
+/*send data to alrarm receiver by using alaram amnager*/
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         Intent broadcast_intent = new Intent(this, AlarmReceiver.class);
-        broadcast_intent.putExtra("test", "Hanzla is here"); //data to pass
+        broadcast_intent.putExtra("test", "Hashi is here"); //data to pass
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  broadcast_intent, 0);
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, 15000, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, 5000, pendingIntent);
     }
 }
